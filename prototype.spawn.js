@@ -132,7 +132,7 @@ module.exports = function () {
         }
 
     StructureSpawn.prototype.spawnDefender =
-        function (room, energy) {
+        function (home, energy) {
             //console.log("MAKING DEFENDER with energy: " + energy);
             var name = "DEF-" + Game.time;
             var body = [];
@@ -144,23 +144,25 @@ module.exports = function () {
             body.push(MOVE);
             // cost = 300
 
-            return this.spawnCreep(body, name, { memory: { role: "defender", room: room, state: null, target: null } });
+            return this.spawnCreep(body, name, { memory: { role: "defender", home: home, state: null, target: null } });
         }
 
     StructureSpawn.prototype.spawnAttacker =
-        function (room, energy, targetRoom) {
+        function (home, energy, targetRoom) {
             //console.log("MAKING DEFENDER with energy: " + energy);
             var name = "ATK-" + Game.time;
             var body = [];
             for (let i = 0; i < 3; i++) {
                 body.push(TOUGH); //20
+            }
+            for (let i = 0; i < 3; i++) {
                 body.push(ATTACK); // 80
             }
             body.push(MOVE); // 50
             body.push(MOVE); // 50
             // cost = 400
 
-            return this.spawnCreep(body, name, { memory: { role: "attacker", room: room, state: null, target: null, targetRoom: targetRoom } });
+            return this.spawnCreep(body, name, { memory: { role: "attacker", home: home, state: null, target: null, targetRoom: targetRoom } });
         }
 
     StructureSpawn.prototype.spawnRepairer =

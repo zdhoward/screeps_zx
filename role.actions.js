@@ -96,8 +96,9 @@ function repair(creep) {
         findRepairTarget(creep);
     }
 
-    if (creep.memory.target) {
-        var target = Game.getObjectById(creep.memory.target);
+    var target = Game.getObjectById(creep.memory.target);
+
+    if (target) {
         if ((target.structureType == STRUCTURE_WALL || target.structureType == STRUCTURE_RAMPART) && target.hits > 5000) {
             creep.memory.target = null;
         } else if (target.hits == target.hitsMax) {
@@ -269,12 +270,31 @@ function defend(creep) {
 }
 
 function attack(creep) {
+    //console.log("ATTACKING");
     if (!creep.memory.target) {
-        //console.log("SETTING DEFENDER MEMORY");
+        //console.log("SETTING ATTACKER MEMORY");
+
         var hostiles = creep.room.find(FIND_HOSTILE_CREEPS);
+        //console.log(creep.room.name + "(all): " + hostiles.length);
         if (hostiles.length > 0) {
             creep.memory.target = creep.pos.findClosestByRange(hostiles).id;
+            //console.log("SETTING TARGET");
         }
+
+        var powerCreeps = creep.room.find(FIND_HOSTILE_POWER_CREEPS);
+        //console.log(creep.room.name + "(power): " + powerCreeps.length);
+        if (powerCreeps.length > 0) {
+            creep.memory.target = creep.pos.findClosestByRange(powerCreeps).id;
+            //console.log("SETTING TARGET");
+        }
+
+        var structures = creep.room.find(FIND_HOSTILE_STRUCTURES);
+        //console.log(creep.room.name + "(structure): " + structures.length);
+        if (structures.length > 0) {
+            creep.memory.target = creep.pos.findClosestByRange(structures).id;
+            //console.log("SETTING TARGET");
+        }
+
     } else {
         var target = Game.getObjectById(creep.memory.target);
         if (!target) {

@@ -100,6 +100,7 @@ function spawnFromQueue(spawn, energy) {
                     break;
                 case "upgrader":
                     Game.spawns[spawn].spawnUpgrader(room, energy);
+                    break;
                 case "upgrader_ld":
                     Game.spawns[spawn].spawnUpgraderLD(room, energy, nextUnit.targetRoom);
                     break;

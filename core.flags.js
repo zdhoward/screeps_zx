@@ -77,6 +77,7 @@ module.exports = {
                     var upgrader_lds = _.filter(Game.creeps, (creep) => creep.memory.role == 'upgrader_ld' && creep.memory.home == Game.spawns[spawn].room.name).length + _.filter(Game.spawns[spawn].room.memory.spawnQueue, (entry) => entry.role == "upgrader_ld").length;
                     var energy = Game.spawns[spawn].room.energyAvailable;
                     if (upgrader_lds < 2) {
+                        //console.log(upgrader_lds);
                         addToSpawnQueue(spawn, "upgrader_ld", Game.flags[flag].pos.roomName);
                     }
 
@@ -97,7 +98,7 @@ module.exports = {
 
                 // red on red flags = attack
                 case COLOR_RED:
-                    console.log("RED FLAG FOUND");
+                    //console.log("RED FLAG FOUND");
                     var attackers = _.filter(Game.creeps, (creep) => creep.memory.role == 'attacker' && creep.memory.home == Game.spawns[spawn].room.name && creep.memory.targetRoom == Game.flags[flag].pos.roomName).length + _.filter(Game.spawns[spawn].room.memory.spawnQueue, (entry) => entry.role == "attacker").length;
                     var energy = Game.spawns[spawn].room.energyAvailable;
                     if (attackers < 4) {

@@ -24,6 +24,7 @@ function countCreeps(room) {
     var repairers = _.filter(Game.creeps, (creep) => creep.memory.role == 'repairer' && creep.memory.home == room).length;
 
     var defenders = _.filter(Game.creeps, (creep) => creep.memory.role == 'defender' && creep.memory.home == room).length;
+    var attackers = _.filter(Game.creeps, (creep) => creep.memory.role == 'attacker' && creep.memory.home == room).length;
 
     var extractors = _.filter(Game.creeps, (creep) => creep.memory.role == 'extractor' && creep.memory.home == room).length;
 
@@ -45,6 +46,8 @@ function countCreeps(room) {
         returnString += "REP: " + repairers + "|";
     if (defenders > 0)
         returnString += "DEF: " + defenders + "|";
+    if (attackers > 0)
+        returnString += "ATK: " + attackers + "|";
     if (extractors > 0)
         returnString += "EXT: " + extractors + "|";
 

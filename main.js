@@ -79,7 +79,7 @@ function cleanMemory() {
 
 module.exports.loop = function () {
     if (Game.cpu.bucket == 10000) {
-        Game.cpu.generatePixel();
+        //Game.cpu.generatePixel();
     }
 
     if (Memory.t1_timestamp == null) {
