@@ -7,6 +7,7 @@ var roleBuilder = require('role.builder');
 var roleBuilder_LD = require('role.builder_ld');
 var roleClaimer = require('role.claimer');
 var roleDefender = require('role.defender');
+var roleAttacker = require('role.attacker');
 var roleRepairer = require('role.repairer');
 var roleNew = require('role.new');
 var overlord = require('core.overlord');
@@ -130,6 +131,9 @@ module.exports.loop = function () {
                 break;
             case "defender":
                 roleDefender.run(creep);
+                break;
+            case "attacker":
+                roleAttacker.run(creep);
                 break;
             case "repairer":
                 roleRepairer.run(creep);

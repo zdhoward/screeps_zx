@@ -97,11 +97,20 @@ module.exports = {
 
                 // red on red flags = attack
                 case COLOR_RED:
+                    console.log("RED FLAG FOUND");
+                    var attackers = _.filter(Game.creeps, (creep) => creep.memory.role == 'attacker' && creep.memory.home == Game.spawns[spawn].room.name && creep.memory.targetRoom == Game.flags[flag].pos.roomName).length + _.filter(Game.spawns[spawn].room.memory.spawnQueue, (entry) => entry.role == "attacker").length;
+                    var energy = Game.spawns[spawn].room.energyAvailable;
+                    if (attackers < 4) {
+                        addToSpawnQueue(spawn, "attacker", Game.flags[flag].pos.roomName);
+                    }
+
+                    // CHECK IF NO CONSTRUCTION SITES
+                    // REMOVE FLAG
                     break;
 
                 // remote building
                 case COLOR_BLUE:
-                    var builder_lds = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder_ld' && creep.memory.home == Game.spawns[spawn].room.name).length + _.filter(Game.spawns[spawn].room.memory.spawnQueue, (entry) => entry.role == "builder_ld").length;
+                    var builder_lds = _.filter(Game.creeps, (creep) => creep.memory.role == 'builder_ld' && creep.memory.home == Game.spawns[spawn].room.name && creep.memory.targetRoom == Game.flags[flag].pos.roomName).length + _.filter(Game.spawns[spawn].room.memory.spawnQueue, (entry) => entry.role == "builder_ld").length;
                     var energy = Game.spawns[spawn].room.energyAvailable;
                     if (builder_lds < 4) {
                         addToSpawnQueue(spawn, "builder_ld", Game.flags[flag].pos.roomName);

@@ -147,6 +147,22 @@ module.exports = function () {
             return this.spawnCreep(body, name, { memory: { role: "defender", room: room, state: null, target: null } });
         }
 
+    StructureSpawn.prototype.spawnAttacker =
+        function (room, energy, targetRoom) {
+            //console.log("MAKING DEFENDER with energy: " + energy);
+            var name = "ATK-" + Game.time;
+            var body = [];
+            for (let i = 0; i < 3; i++) {
+                body.push(TOUGH); //20
+                body.push(ATTACK); // 80
+            }
+            body.push(MOVE); // 50
+            body.push(MOVE); // 50
+            // cost = 400
+
+            return this.spawnCreep(body, name, { memory: { role: "attacker", room: room, state: null, target: null, targetRoom: targetRoom } });
+        }
+
     StructureSpawn.prototype.spawnRepairer =
         function (home, energy) {
             var name = "REP-" + Game.time;

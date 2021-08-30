@@ -100,12 +100,17 @@ function spawnFromQueue(spawn, energy) {
                     break;
                 case "upgrader":
                     Game.spawns[spawn].spawnUpgrader(room, energy);
+                case "upgrader_ld":
+                    Game.spawns[spawn].spawnUpgraderLD(room, energy, nextUnit.targetRoom);
                     break;
                 case "repairer":
                     Game.spawns[spawn].spawnRepairer(room, energy);
                     break;
                 case "defender":
                     Game.spawns[spawn].spawnDefender(room, energy);
+                    break;
+                case "attacker":
+                    Game.spawns[spawn].spawnAttacker(room, energy, nextUnit.targetRoom);
                     break;
                 case "claimer":
                     Game.spawns[spawn].spawnClaimer(room, energy, nextUnit.targetRoom, nextUnit.action);

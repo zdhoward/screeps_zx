@@ -268,5 +268,22 @@ function defend(creep) {
     }
 }
 
+function attack(creep) {
+    if (!creep.memory.target) {
+        //console.log("SETTING DEFENDER MEMORY");
+        var hostiles = creep.room.find(FIND_HOSTILE_CREEPS);
+        if (hostiles.length > 0) {
+            creep.memory.target = creep.pos.findClosestByRange(hostiles).id;
+        }
+    } else {
+        var target = Game.getObjectById(creep.memory.target);
+        if (!target) {
+            creep.memory.target = null;
+        } else if (creep.attack(target) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(target);
+        }
+    }
+}
+
 // EXPORTS
-module.exports = { moveToRoom, collectEnergy, repair, upgrade, build, refuel, defend, harvest, offload, claim, extract };
+module.exports = { moveToRoom, collectEnergy, repair, upgrade, build, refuel, defend, harvest, offload, claim, extract, attack };
