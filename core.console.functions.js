@@ -28,6 +28,8 @@ function countCreeps(room) {
 
     var extractors = _.filter(Game.creeps, (creep) => creep.memory.role == 'extractor' && creep.memory.home == room).length;
 
+    var runners = _.filter(Game.creeps, (creep) => creep.memory.role == 'runners' && creep.memory.home == room).length;
+
     var returnString = "";
 
     if (harvesters > 0)
@@ -50,6 +52,8 @@ function countCreeps(room) {
         returnString += "ATK: " + attackers + "|";
     if (extractors > 0)
         returnString += "EXT: " + extractors + "|";
+    if (runners > 0)
+        returnString += "RUN: " + runners + "|";
 
     console.log(returnString);
 }

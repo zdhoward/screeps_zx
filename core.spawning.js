@@ -46,8 +46,11 @@ function getRequiredDefenderQty(spawn) {
 function getRequiredExtractorQty(spawn) {
     var extractors = _.filter(Game.spawns[spawn].room.find(FIND_STRUCTURES), (structure) => structure.structureType == STRUCTURE_EXTRACTOR);
     //console.log("ROOM: " + Game.spawns[spawn].room.name + " | E: " + extractors.length);
-    return 0; // extractors.length;
-
+    if (extractors.length > 0) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 function getRequiredRepairerQty(spawn) {
@@ -116,6 +119,9 @@ function spawnFromQueue(spawn, energy) {
                 case "claimer":
                     Game.spawns[spawn].spawnClaimer(room, energy, nextUnit.targetRoom, nextUnit.action);
                     break;
+                case "runner":
+                    Game.spawns[spawn].spawnRunner(room, energy);
+                    break;
                 case "new":
                     Game.spawns[spawn].spawnNew(room, energy);
                     break;
@@ -144,6 +150,7 @@ module.exports = {
         var harvesters = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester' && creep.memory.home == room).length + _.filter(Game.spawns[spawn].room.memory.spawnQueue, (entry) => entry.role == "harvester").length;
         var harvester_lds = _.filter(Game.creeps, (creep) => creep.memory.role == 'harvester_ld' && creep.memory.home == room).length + _.filter(Game.spawns[spawn].room.memory.spawnQueue, (entry) => entry.role == "harvester_ld").length;
         var extractors = _.filter(Game.creeps, (creep) => creep.memory.role == 'extractor' && creep.memory.home == room).length + _.filter(Game.spawns[spawn].room.memory.spawnQueue, (entry) => entry.role == "extractor").length;
+        var runners = _.filter(Game.creeps, (creep) => creep.memory.role == 'runner' && creep.memory.home == room).length + _.filter(Game.spawns[spawn].room.memory.spawnQueue, (entry) => entry.role == "runner").length;
 
         if (news < maxNewQty) {
             addToSpawnQueue(spawn, "new");

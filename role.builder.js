@@ -4,6 +4,7 @@ function switchState(creep) {
     if (creep.room.find(FIND_CONSTRUCTION_SITES) == 0) {
         creep.memory.state = null;
         creep.memory.role = "repairer";
+        creep.memory.target = null;
     }
 
     if (creep.memory.state == null) {

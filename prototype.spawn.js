@@ -225,6 +225,25 @@ module.exports = function () {
             return this.spawnCreep(body, name, { memory: { role: 'builder', home: home, state: null, target: null } });
         }
 
+    StructureSpawn.prototype.spawnRunner =
+        function (home, energy) {
+            var name = "RUN-" + Game.time;
+            var maxCost = 600;
+            if (energy > maxCost) {
+                energy = maxCost;
+            }
+
+            var numberOfParts = Math.floor(energy / 100);
+            for (let i = 0; i < numberOfParts; i++) {
+                body.push(CARRY);
+            }
+            for (let i = 0; i < numberOfParts; i++) {
+                body.push(MOVE);
+            }
+
+            return this.spawnCreep(body, name, { memory: { role: 'new', state: null, home: home, targetRoom: null, action: null } });
+        }
+
     StructureSpawn.prototype.spawnNew =
         function (home, energy) {
             var name = "NEW-" + Game.time;
