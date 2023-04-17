@@ -1,34 +1,32 @@
-const { collectEnergy, build } = require('role.actions');
+const lib = require("lib.role");
 
-function switchState(creep) {
-    if (creep.room.find(FIND_CONSTRUCTION_SITES) == 0) {
-        creep.memory.state = null;
-        creep.memory.role = "repairer";
-        creep.memory.target = null;
-    }
-
-    if (creep.memory.state == null) {
-        creep.memory.state = "collecting";
-    }
-    if (creep.memory.state == "collecting" && creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
-        creep.memory.state = "building";
-    }
-    if (creep.memory.state == "building" && creep.store[RESOURCE_ENERGY] == 0) {
-        creep.memory.state = "collecting";
-    }
-}
-
-var roleBuilder = {
-    /** @param {Creep} creep **/
+const roleBuilder = {
+    /** @param {Creep} creep */
     run: function (creep) {
-        switchState(creep);
-        switch (creep.memory.state) {
-            case "collecting":
-                collectEnergy(creep);
-                break;
-            case "building":
-                build(creep);
-                break;
+        //creep.memory.building = null;
+        if (!creep.memory.building || creep.memory.building == null) {
+            let constructionSites = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
+            let mostCompleteSites = _.sortBy(constructionSites, (site) => site.progress / site.progressTotal).reverse();
+
+            if (mostCompleteSites.length <= 0) return;
+
+            let mostCompleteSite = mostCompleteSites[0];
+            creep.memory.building = mostCompleteSite.id;
+        }
+
+        if (creep.store.getUsedCapacity(RESOURCE_ENERGY) <= 0) {
+            if (lib.withdrawResourceFromClosestStructure(creep, RESOURCE_ENERGY, STRUCTURE_CONTAINER)) return;
+            if (lib.withdrawResourceFromClosestStructure(creep, RESOURCE_ENERGY, STRUCTURE_STORAGE)) return;
+            if (lib.withdrawResourceFromClosestStructure(creep, RESOURCE_ENERGY, STRUCTURE_EXTENSION)) return;
+            lib.pickupDroppedResource(creep, RESOURCE_ENERGY);
+        } else {
+            //console.log(creep.build(creep.memory.building));
+            let structure = Game.getObjectById(creep.memory.building);
+
+            if (structure == null) creep.memory.building = null;
+
+            if (creep.build(structure) == ERR_NOT_IN_RANGE)
+                creep.travelTo(structure);
         }
     }
 }

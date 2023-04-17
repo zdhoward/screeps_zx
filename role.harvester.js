@@ -1,30 +1,13 @@
-const { harvest, offload } = require('role.actions');
+const lib = require("lib.role");
 
-function switchState(creep) {
-    if (creep.memory.state == null) {
-        creep.memory.state = "harvesting";
-    }
-    if (creep.memory.state != 'harvesting' && creep.store[RESOURCE_ENERGY] == 0) {
-        creep.memory.state = 'harvesting';
-    }
-    if (creep.memory.state == 'harvesting' && creep.store.getFreeCapacity() == 0) {
-        creep.memory.state = 'offloading';
-    }
-}
-
-var roleHarvester = {
-    /** @param {Creep} creep **/
+const roleHarvester = {
+    /** @param {Creep} creep */
     run: function (creep) {
-        switchState(creep);
-        switch (creep.memory.state) {
-            case "harvesting":
-                harvest(creep);
-                break;
-            case "offloading":
-                offload(creep);
-                break;
+        let source = Game.getObjectById(creep.memory.source);
+
+        if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+            creep.travelTo(source);
         }
     }
 }
-
 module.exports = roleHarvester;

@@ -1,28 +1,16 @@
-const { collectEnergy, upgrade } = require('role.actions');
+const lib = require("lib.role");
 
-function switchState(creep) {
-    if (creep.memory.state == null) {
-        creep.memory.state = "collecting";
-    }
-    if (creep.memory.state == "collecting" && creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
-        creep.memory.state = "upgrading";
-    }
-    if (creep.memory.state == "upgrading" && creep.store[RESOURCE_ENERGY] == 0) {
-        creep.memory.state = "collecting";
-    }
-}
-
-var roleUpgrader = {
-    /** @param {Creep} creep **/
+const roleUpgrader = {
+    /** @param {Creep} creep */
     run: function (creep) {
-        switchState(creep);
-        switch (creep.memory.state) {
-            case "collecting":
-                collectEnergy(creep);
-                break;
-            case "upgrading":
-                upgrade(creep);
-                break;
+        if (creep.store.getUsedCapacity(RESOURCE_ENERGY) <= 0) {
+            if (lib.withdrawResourceFromClosestStructure(creep, RESOURCE_ENERGY, STRUCTURE_CONTAINER)) return;
+            if (lib.withdrawResourceFromClosestStructure(creep, RESOURCE_ENERGY, STRUCTURE_STORAGE)) return;
+            if (lib.withdrawResourceFromClosestStructure(creep, RESOURCE_ENERGY, STRUCTURE_EXTENSION)) return;
+            lib.pickupDroppedResource(creep, RESOURCE_ENERGY);
+        } else {
+            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE)
+                creep.travelTo(creep.room.controller);
         }
     }
 }
