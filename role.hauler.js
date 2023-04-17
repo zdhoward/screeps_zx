@@ -8,8 +8,9 @@ const roleHauler = {
         } else {
             if (lib.transferResourceToClosestStructure(creep, RESOURCE_ENERGY, STRUCTURE_SPAWN)) return;
             if (lib.transferResourceToClosestStructure(creep, RESOURCE_ENERGY, STRUCTURE_EXTENSION)) return;
-            if (lib.transferResourceToClosestStructure(creep, RESOURCE_ENERGY, STRUCTURE_CONTAINER)) return;
+            if (lib.transferResourceToClosestStructure(creep, RESOURCE_ENERGY, STRUCTURE_LINK)) return;
             if (lib.transferResourceToClosestStructure(creep, RESOURCE_ENERGY, STRUCTURE_STORAGE)) return;
+            if (lib.transferResourceToClosestStructure(creep, RESOURCE_ENERGY, STRUCTURE_CONTAINER)) return;
             if (lib.transferResourceToClosestStructure(creep, RESOURCE_ENERGY, STRUCTURE_TOWER)) return;
         }
     }

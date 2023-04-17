@@ -41,6 +41,20 @@ const lib = {
         return true;
     },
 
+    withdrawEnergyFromControllerContainer(creep) {
+        if (Memory.colonies[creep.room.name].controllerContainer == null) return false;
+        if (Memory.colonies[creep.room.name].controllerContainer.state == STRUCTURE_CONTAINER || Memory.colonies[creep.room.name].controllerContainer.state == STRUCTURE_LINK) {
+            let structure = Game.getObjectById(Memory.colonies[creep.room.name].controllerContainer.id);
+            if (structure == null) return false;
+            if (structure.store.getUsedCapacity(RESOURCE_ENERGY) <= 0) return false;
+            if (creep.withdraw(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.travelTo(structure);
+            }
+        } else return false;
+
+        return true;
+    },
+
     findMyMostDamagedStructure: function (roomID) {
         let room = Game.rooms[roomID];
         let structures = room.find(FIND_STRUCTURES);

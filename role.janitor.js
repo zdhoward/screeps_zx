@@ -8,6 +8,7 @@ const roleJanitor = {
             lib.pickupDroppedResource(creep, RESOURCE_ENERGY);
         } else {
             if (lib.transferResourceToClosestStructure(creep, RESOURCE_ENERGY, STRUCTURE_TOWER)) return;
+            //if (lib.transferResourceToClosestStructure(creep, RESOURCE_ENERGY, STRUCTURE_LINK)) return;
         }
     }
 }

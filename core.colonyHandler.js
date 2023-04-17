@@ -1,11 +1,10 @@
+const profiler = require("ext.profiler");
+
 const unitHandler = require('core.unitHandler');
 const structureHandler = require('core.structureHandler');
 
 const { tryBuildColony } = require('lib.planning');
 
-// rename to something like updateMemory
-// if Memory.colonies[colony].controllerContainer.state == "constructing";
-// then check to see if container exists at Memory.colonies[colony].controllerContainer.x, Memory.colonies[colony].controllerContainer.y
 function updateColonyMemory(colony) {
     let currentRCL = Game.rooms[colony].controller.level;
     if (Memory.colonies[colony].rcl != currentRCL) {
@@ -14,16 +13,28 @@ function updateColonyMemory(colony) {
         tryBuildColony(colony);
     }
 
+    // checking containerController, build container if possible, otherwise, build link if possible
     if (Memory.colonies[colony].controllerContainer != null) {
         if (Memory.colonies[colony].controllerContainer.state == "constructing") {
             let posInfo = Game.rooms[colony].lookForAt(LOOK_STRUCTURES, Memory.colonies[colony].controllerContainer.x, Memory.colonies[colony].controllerContainer.y);
             if (posInfo.length > 0) {
                 if (posInfo[0].structureType == STRUCTURE_CONTAINER) {
-                    console.log(JSON.stringify(posInfo[0].structureType));
-                    Memory.colonies[colony].controllerContainer.state = "container";
+                    Memory.colonies[colony].controllerContainer.state = STRUCTURE_CONTAINER;
+                    Memory.colonies[colony].controllerContainer.id = posInfo[0].id;
+                } else if (posInfo[0].structureType == STRUCTURE_LINK) {
+                    Memory.colonies[colony].controllerContainer.state = STRUCTURE_LINK;
                     Memory.colonies[colony].controllerContainer.id = posInfo[0].id;
                 }
             }
+        } else if (Memory.colonies[colony].controllerContainer.state == "container" && currentRCL >= 5) {
+            let structure = Game.getObjectById(Memory.colonies[colony].controllerContainer.id);
+            structure.destroy();
+            Memory.colonies[colony].controllerContainer.state = "ruin";
+        } else if (Memory.colonies[colony].controllerContainer.state == "ruin") {
+            if (Game.rooms[colony].createConstructionSite(Memory.colonies[colony].controllerContainer.x, Memory.colonies[colony].controllerContainer.y, STRUCTURE_LINK) == OK) {
+                Memory.colonies[colony].controllerContainer.state = "constructing";
+            }
+
         }
     }
 }
@@ -51,5 +62,7 @@ const colonyHandler = {
         unitHandler.run();
     }
 }
+
+profiler.registerObject(colonyHandler, 'colonyHandler');
 
 module.exports = colonyHandler;

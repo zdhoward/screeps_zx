@@ -1,5 +1,7 @@
 // External packages
 const Traveler = require("ext.Traveler");
+const profiler = require("ext.profiler");
+//profiler.enable();
 
 // Core modules
 global.cmd = require("core.commands");
@@ -23,7 +25,8 @@ function initialize() {
 }
 
 module.exports.loop = function () {
-    initialize();
-
-    colonyHandler.tick();
+    profiler.wrap(function () {
+        initialize();
+        colonyHandler.tick();
+    });
 }

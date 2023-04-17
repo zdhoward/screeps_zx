@@ -1,3 +1,5 @@
+const profiler = require("ext.profiler");
+
 // Import creep roles
 const roleHarvester = require('role.harvester');
 const roleUpgrader = require('role.upgrader');
@@ -145,5 +147,7 @@ const unitHandler = {
         processCreepsBehaviour();
     }
 }
+
+profiler.registerObject(unitHandler, 'unitHandler');
 
 module.exports = unitHandler;
