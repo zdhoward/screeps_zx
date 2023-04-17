@@ -17,7 +17,12 @@ function debug() {
 
     // room.visual.rect(pos.x, pos.y, 12, 12);
 
-    tryBuildColony(roomID);
+    //tryBuildColony(roomID);
+
+    //tryConstructContainerNearController(roomID);
+
+
+    //console.log("NULL");
 
 }
 

@@ -132,7 +132,25 @@ function tryConstructBunker(roomID) {
 }
 
 function tryConstructContainerNearController(roomID) {
+    if (Memory.colonies[roomID].controllerContainer != null)
+        return;
 
+    let room = Game.rooms[roomID];
+    let controller = room.controller;
+
+    for (let x = -1; x <= 1; x++) {
+        for (let y = -1; y <= 1; y++) {
+            if (x == 0 && y == 0) continue;
+            let newPos = { x: controller.pos.x + x, y: controller.pos.y + y };
+            let posInfo = room.lookAt(newPos.x, newPos.y);
+            if (posInfo.terrain != TERRAIN_MASK_WALL) {
+                if (room.createConstructionSite(newPos.x, newPos.y, STRUCTURE_CONTAINER) == OK) {
+                    Memory.colonies[roomID].controllerContainer = { state: "constructing", x: newPos.x, y: newPos.y };
+                }
+                return;
+            }
+        }
+    }
 }
 
 function tryBuildColony(roomID) {
