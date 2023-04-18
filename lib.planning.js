@@ -113,10 +113,6 @@ function tryConstructBunker(roomID) {
     let originX = anchor.x - widthOffset;
     let originY = anchor.y - heightOffset;
 
-    // console.log("RCL: " + room.controller.level);
-    // console.log("Anchor: " + anchor.x + " " + anchor.y);
-    // console.log("Origin: " + originX + " " + originY);
-
     for (let key in bunkerBP['buildings']) {
         if (rcl < 6 && key == STRUCTURE_RAMPART) continue;
         if (rcl < 5 && key == STRUCTURE_ROAD) continue;
@@ -127,6 +123,14 @@ function tryConstructBunker(roomID) {
 
             room.createConstructionSite(createX, createY, key, key);
 
+        }
+    }
+
+    if (rcl >= 6) {
+        // build extractor
+        let minerals = room.find(FIND_MINERALS);
+        for (let mineral of minerals) {
+            room.createConstructionSite(mineral.pos.x, mineral.pos.y, STRUCTURE_EXTRACTOR);
         }
     }
 }
@@ -153,6 +157,33 @@ function tryConstructContainerNearController(roomID) {
     }
 }
 
+function tryUpdateControllerContainer(roomID) {
+    // checking containerController, build container if possible, otherwise, build link if possible
+    if (Memory.colonies[roomID].controllerContainer != null) {
+        if (Memory.colonies[roomID].controllerContainer.state == "constructing") {
+            let posInfo = Game.rooms[roomID].lookForAt(LOOK_STRUCTURES, Memory.colonies[roomID].controllerContainer.x, Memory.colonies[roomID].controllerContainer.y);
+            if (posInfo.length > 0) {
+                if (posInfo[0].structureType == STRUCTURE_CONTAINER) {
+                    Memory.colonies[roomID].controllerContainer.state = STRUCTURE_CONTAINER;
+                    Memory.colonies[roomID].controllerContainer.id = posInfo[0].id;
+                } else if (posInfo[0].structureType == STRUCTURE_LINK) {
+                    Memory.colonies[roomID].controllerContainer.state = STRUCTURE_LINK;
+                    Memory.colonies[roomID].controllerContainer.id = posInfo[0].id;
+                }
+            }
+        } else if (Memory.colonies[roomID].controllerContainer.state == "container" && currentRCL >= 5) {
+            let structure = Game.getObjectById(Memory.colonies[roomID].controllerContainer.id);
+            structure.destroy();
+            Memory.colonies[roomID].controllerContainer.state = "ruin";
+        } else if (Memory.colonies[roomID].controllerContainer.state == "ruin") {
+            if (Game.rooms[roomID].createConstructionSite(Memory.colonies[roomID].controllerContainer.x, Memory.colonies[roomID].controllerContainer.y, STRUCTURE_LINK) == OK) {
+                Memory.colonies[roomID].controllerContainer.state = "constructing";
+            }
+
+        }
+    }
+}
+
 function tryBuildColony(roomID) {
     tryConstructBunker(roomID);
     tryConstructContainerNearController(roomID);
@@ -160,4 +191,5 @@ function tryBuildColony(roomID) {
 
 module.exports = {
     tryBuildColony,
+    tryUpdateControllerContainer,
 };

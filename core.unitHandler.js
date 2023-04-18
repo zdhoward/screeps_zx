@@ -7,6 +7,7 @@ const roleHauler = require('role.hauler');
 const roleBuilder = require('role.builder');
 const roleRepairer = require('role.repairer');
 const roleJanitor = require('role.janitor');
+const roleScout = require('role.scout');
 
 const unitFactory = require('lib.unitFactory');
 
@@ -74,6 +75,16 @@ function processCreepsBehaviour() {
             roleJanitor.run(creep);
             continue
         }
+
+        // if (creep.memory.role == 'mineralHarvester') {
+        //     roleHarvester.run(creep);
+        //     continue
+        // }
+
+        // if (creep.memory.role == 'mineralHauler') {
+        //     //roleMineralHauler.run(creep);
+        //     continue
+        // }
     }
 }
 
@@ -94,8 +105,10 @@ const unitHandler = {
 
             // Get counts for creeps of each role
             let harvesters = _.filter(creeps, (creep) => creep.memory.role == 'harvester');
+            // let mineralHarvesters = _.filter(creeps, (creep) => creep.memory.role == 'mineralHarvester');
             let upgraders = _.filter(creeps, (creep) => creep.memory.role == 'upgrader');
             let haulers = _.filter(creeps, (creep) => creep.memory.role == 'hauler');
+            // let mineralHaulers = _.filter(creeps, (creep) => creep.memory.role == 'mineralHauler');
             let builders = _.filter(creeps, (creep) => creep.memory.role == 'builder');
             let repairers = _.filter(creeps, (creep) => creep.memory.role == 'repairer');
             let janitors = _.filter(creeps, (creep) => creep.memory.role == 'janitor');
@@ -103,6 +116,10 @@ const unitHandler = {
             // If there aren't enough harvesters
             let sources = spawner.room.find(FIND_SOURCES);
             let sourceID = null;
+
+            let extractors = _.filter(spawner.room.find(FIND_MY_STRUCTURES), (structure) => structure.structureType == STRUCTURE_EXTRACTOR);
+            let minerals = spawner.room.find(FIND_MINERALS);
+
             if (harvesters.length < sources.length) {
 
                 // Find a free source
@@ -118,7 +135,7 @@ const unitHandler = {
             }
 
             else if (haulers.length < 2) {
-                unitFactory.spawnUnit(spawner, 'hauler');
+                unitFactory.spawnUnit(spawner, 'hauler', { resourceType: RESOURCE_ENERGY });
             }
 
             else if (upgraders.length < 4) {
@@ -138,6 +155,32 @@ const unitHandler = {
             else if (janitors.length < 1) {
                 unitFactory.spawnUnit(spawner, 'janitor', { working: false });
             }
+
+            // else if (spawner.room.controller.level >= 6 && mineralHarvesters < minerals.length) {
+            //     // Find a free mineral source
+            //     for (let i = 0; i < minerals.length; i++) {
+            //         let source = _.filter(mineralHarvesters, (creep) => creep.memory.source == minerals[i].id);
+            //         if (source.length == 0) {
+            //             sourceID = minerals[i].id;
+            //             break;
+            //         }
+            //     }
+
+            //     unitFactory.spawnUnit(spawner, 'mineralHarvester', { source: sourceID });
+            // }
+
+            // else if (spawner.room.controller.level >= 6 && mineralHaulers.length < minerals.length) {
+            //     // Find a free mineral source
+            //     for (let i = 0; i < minerals.length; i++) {
+            //         let source = _.filter(mineralHarvesters, (creep) => creep.memory.source == minerals[i].id);
+            //         if (source.length == 0) {
+            //             sourceID = minerals[i].id;
+            //             break;
+            //         }
+            //     }
+
+            //     unitFactory.spawnUnit(spawner, 'mineralHauler', { source: sourceID });
+            // }
 
             updateSpawningLabels(spawner);
         }

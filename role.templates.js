@@ -5,6 +5,7 @@ const templates = {
     "builder": { prefix: "BLD", bodyBase: [WORK, MOVE, CARRY, MOVE], bodyExtent: [WORK, CARRY], maxExtent: 1 },
     "repairer": { prefix: "REP", bodyBase: [WORK, MOVE, CARRY, MOVE], bodyExtent: [WORK, CARRY], maxExtent: 1 },
     "janitor": { prefix: "JAN", bodyBase: [WORK, MOVE, CARRY, MOVE], bodyExtent: [WORK, CARRY], maxExtent: 1 },
+    "scout": { prefix: "SCO", bodyBase: [MOVE, MOVE, TOUGH], bodyExtent: [MOVE, TOUGH], maxExtent: 1 },
 }
 
 module.exports = templates;

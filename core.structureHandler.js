@@ -1,7 +1,6 @@
 const profiler = require("ext.profiler");
 
 const roleTower = require('role.tower');
-const roleLink = require('role.link');
 
 function balanceLinks(roomID) {
     // get all links
@@ -9,15 +8,7 @@ function balanceLinks(roomID) {
     let structures = room.find(FIND_MY_STRUCTURES);
     let links = _.filter(structures, (structure) => structure.structureType == STRUCTURE_LINK);
 
-    // analyze links
-    // let capacity = links[0].store.getCapacity(RESOURCE_ENERGY);
-    // let avgEnergy = 0;
-    // for (let link of links) {
-    //     avgEnergy += link.store.getUsedCapacity(RESOURCE_ENERGY);
-    // }
-    // avgEnergy = avgEnergy / links.length;
-
-    // console.log("Avg Energy in Links: " + avgEnergy + " / " + capacity);
+    // SHOULD PROBABLY REDO THIS TO PUSH ENERGY FROM BUNKER TO OTHER LINKS
 
     for (let link of links) {
         if (link.cooldown > 0) continue;
@@ -44,9 +35,6 @@ const structureHandler = {
         }
 
         balanceLinks(colony);
-        // for (let i = 0; i < links.length; i++) {
-        //     roleLink.run(links[i]);
-        // }
     }
 }
 
