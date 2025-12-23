@@ -9,26 +9,26 @@
  * 5. Telemetry (stats, visuals)
  */
 
-const profiler = require("ext.profiler");
+const profiler = require("ext/profiler");
 
 // Config & Schema
-const SCHEMA = require("config.schema");
+const SCHEMA = require("config/schema");
 
 // Cleanup
-const MemoryCleanup = require("lib.utils.memoryCleanup");
+const MemoryCleanup = require("lib/utils/memoryCleanup");
 
 // Perception
-const RoomCache = require("kernel.perception.roomCache");
-const RoomState = require("kernel.perception.roomState");
-const ThreatScan = require("kernel.perception.threatScan");
+const RoomCache = require("kernel/perception/roomCache");
+const RoomState = require("kernel/perception/roomState");
+const ThreatScan = require("kernel/perception/threatScan");
 
 // Planning
-const SpawnPlanner = require("kernel.planning.spawnPlanner");
-const StructurePlanner = require("kernel.planning.structurePlanner");
+const SpawnPlanner = require("kernel/planning/spawnPlanner");
+const StructurePlanner = require("kernel/planning/structurePlanner");
 
 // Execution
-const UnitExecutor = require("kernel.execution.unitExecutor");
-const StructureExecutor = require("kernel.execution.structureExecutor");
+const UnitExecutor = require("kernel/execution/unitExecutor");
+const StructureExecutor = require("kernel/execution/structureExecutor");
 
 /**
  * Initialize Memory schema if needed

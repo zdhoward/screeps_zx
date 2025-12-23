@@ -4,7 +4,7 @@
  * Executes structure intents (towers, links, etc.)
  */
 
-const TowerAI = require("lib.roles.tower");
+const TowerAI = require("lib/roles/tower");
 
 /**
  * Execute tower intents

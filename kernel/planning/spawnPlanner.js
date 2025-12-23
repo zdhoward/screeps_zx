@@ -7,8 +7,8 @@
  *   2. Economy (from RoomState + SpawnPolicy)
  */
 
-const SpawnPolicy = require("kernel.planning.policies.spawnPolicy");
-const DefensePolicy = require("kernel.planning.policies.defensePolicy");
+const SpawnPolicy = require("kernel/planning/policies/spawnPolicy");
+const DefensePolicy = require("kernel/planning/policies/defensePolicy");
 
 /**
  * Count creeps by role for a given room
