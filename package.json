@@ -1,0 +1,31 @@
+{
+  "name": "screeps_zx",
+  "version": "1.0.0",
+  "description": "ZXBot vNext is a complete rewrite of the Screeps AI bot using a **Kernel + Intent + Policy** architecture. This design emphasizes:",
+  "main": "main.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zdhoward/screeps_zx.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/zdhoward/screeps_zx/issues"
+  },
+  "homepage": "https://github.com/zdhoward/screeps_zx#readme",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "screeps-api": "^1.16.1"
+  },
+  "devDependencies": {
+    "@types/screeps": "^3.3.8"
+  }
+}
