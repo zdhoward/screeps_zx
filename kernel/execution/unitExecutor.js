@@ -4,8 +4,8 @@
  * Executes spawn intents and creep behaviors.
  */
 
-const RoleRegistry = require("lib/roles/registry");
-const UnitFactory = require("lib/unitFactory");
+const RoleRegistry = require("lib.roles.registry");
+const UnitFactory = require("lib.unitFactory");
 
 /**
  * Execute spawn intents for a room

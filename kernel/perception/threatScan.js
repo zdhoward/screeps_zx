@@ -10,7 +10,7 @@
  *   anyHomeAlert: boolean
  */
 
-const RoomState = require("kernel/perception/roomState");
+const RoomState = require("kernel.perception.roomState");
 
 function energyRatio(structure) {
     const cap = structure.store.getCapacity(RESOURCE_ENERGY);
