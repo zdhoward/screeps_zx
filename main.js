@@ -9,6 +9,8 @@
  * 5. Telemetry (stats, visuals)
  */
 
+require("ext.bootstrap");
+
 const profiler = require("ext.profiler");
 
 // Config & Schema
