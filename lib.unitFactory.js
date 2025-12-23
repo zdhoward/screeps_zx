@@ -1,8 +1,8 @@
 /**
- * lib/unitFactory.js
+ * lib.unitFactory.js
  *
- * Spawns creeps with role-specific body templates.
- * Scales body parts based on available energy.
+ * Spawns creeps using role templates and writes correct creep.memory.
+ * This is the only place creeps should ever be created.
  */
 
 const BODY_TEMPLATES = {
@@ -70,69 +70,60 @@ function buildBody(role, energyAvailable) {
     const template = BODY_TEMPLATES[role];
     if (!template) return null;
 
-    let body = [...template.base];
+    let body = template.base.slice();
     let cost = bodyCost(body);
 
-    // Add extents while we have energy
-    let extentsAdded = 0;
-    while (extentsAdded < template.maxExtent) {
-        const nextCost = cost + bodyCost(template.extent);
-        if (nextCost > energyAvailable) break;
+    let extents = 0;
+    while (extents < template.maxExtent) {
+        const extCost = bodyCost(template.extent);
+        if (cost + extCost > energyAvailable) break;
 
         body = body.concat(template.extent);
-        cost = nextCost;
-        extentsAdded++;
+        cost += extCost;
+        extents++;
     }
-
-    // Final validation
-    if (cost > energyAvailable) return null;
 
     return body;
 }
 
 const UnitFactory = {
+
     /**
-     * Spawn a creep
-     * @param {StructureSpawn} spawn
-     * @param {string} role
-     * @param {object} options - { homeRoom, targetRoom, sourceId, ... }
-     * @returns {number} spawn result code
+     * Spawn a creep with full role memory
      */
     spawn(spawn, role, options = {}) {
         const template = BODY_TEMPLATES[role];
         if (!template) {
-            console.log(`[FACTORY] Unknown role: ${role}`);
+            console.log(`[FACTORY] Unknown role '${role}'`);
             return ERR_INVALID_ARGS;
         }
 
-        const energyAvailable = spawn.room.energyAvailable;
-        const body = buildBody(role, energyAvailable);
+        if (spawn.spawning) return ERR_BUSY;
 
-        if (!body) {
-            console.log(`[FACTORY] Cannot afford ${role} (need ${bodyCost(template.base)}, have ${energyAvailable})`);
+        const energy = spawn.room.energyAvailable;
+        const body = buildBody(role, energy);
+
+        if (!body || body.length === 0) {
+            const minCost = bodyCost(template.base);
+            console.log(`[FACTORY] Cannot afford ${role} (need ${minCost}, have ${energy})`);
             return ERR_NOT_ENOUGH_ENERGY;
         }
 
-        const name = `${template.prefix}-${spawn.room.name}-${Game.time}`;
+        const name = `${template.prefix}_${spawn.room.name}_${Game.time}`;
 
         const memory = {
             role,
             homeRoom: options.homeRoom || spawn.room.name,
-            assignment: {}
+            assignment: {
+                sourceId: options.sourceId || null,
+                targetRoom: options.targetRoom || null
+            }
         };
-
-        // Add assignment fields
-        if (options.targetRoom) {
-            memory.assignment.targetRoom = options.targetRoom;
-        }
-        if (options.sourceId) {
-            memory.assignment.sourceId = options.sourceId;
-        }
 
         const result = spawn.spawnCreep(body, name, { memory });
 
         if (result === OK) {
-            console.log(`[FACTORY] Spawning ${name} with ${body.length} parts`);
+            console.log(`[FACTORY] Spawning ${name} as ${role} (${body.length} parts)`);
         }
 
         return result;
