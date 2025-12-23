@@ -47,7 +47,7 @@ class Traveler {
         let travelData = creep.memory._trav;
         let state = this.deserializeState(travelData, destination);
         // uncomment to visualize destination
-        // this.circle(destination, "orange");
+        // this.circle(destination.pos, "orange");
         // check if creep is stuck
         if (this.isStuck(creep, state)) {
             state.stuckCount++;
@@ -398,9 +398,8 @@ class Traveler {
      * @returns {any}
      */
     static getStructureMatrix(room, freshMatrix) {
-        if (!this.structureMatrixTick) this.structureMatrixTick = {};
-        if (!this.structureMatrixCache[room.name] || (freshMatrix && Game.time !== this.structureMatrixTick[room.name])) {
-            this.structureMatrixTick[room.name] = Game.time;
+        if (!this.structureMatrixCache[room.name] || (freshMatrix && Game.time !== this.structureMatrixTick)) {
+            this.structureMatrixTick = Game.time;
             let matrix = new PathFinder.CostMatrix();
             this.structureMatrixCache[room.name] = Traveler.addStructuresToMatrix(room, matrix, 1);
         }
@@ -412,9 +411,8 @@ class Traveler {
      * @returns {any}
      */
     static getCreepMatrix(room) {
-        if (!this.creepMatrixTick) this.creepMatrixTick = {};
-        if (!this.creepMatrixCache[room.name] || Game.time !== this.creepMatrixTick[room.name]) {
-            this.creepMatrixTick[room.name] = Game.time;
+        if (!this.creepMatrixCache[room.name] || Game.time !== this.creepMatrixTick) {
+            this.creepMatrixTick = Game.time;
             this.creepMatrixCache[room.name] = Traveler.addCreepsToMatrix(room, this.getStructureMatrix(room, true).clone());
         }
         return this.creepMatrixCache[room.name];
@@ -567,7 +565,20 @@ class Traveler {
 }
 Traveler.structureMatrixCache = {};
 Traveler.creepMatrixCache = {};
-module.exports = Traveler;
-
-
-
+exports.Traveler = Traveler;
+// this might be higher than you wish, setting it lower is a great way to diagnose creep behavior issues. When creeps
+// need to repath to often or they aren't finding valid paths, it can sometimes point to problems elsewhere in your code
+const REPORT_CPU_THRESHOLD = 1000;
+const DEFAULT_MAXOPS = 20000;
+const DEFAULT_STUCK_VALUE = 2;
+const STATE_PREV_X = 0;
+const STATE_PREV_Y = 1;
+const STATE_STUCK = 2;
+const STATE_CPU = 3;
+const STATE_DEST_X = 4;
+const STATE_DEST_Y = 5;
+const STATE_DEST_ROOMNAME = 6;
+// assigns a function to Creep.prototype: creep.travelTo(destination)
+Creep.prototype.travelTo = function (destination, options) {
+    return Traveler.travelTo(this, destination, options);
+};
