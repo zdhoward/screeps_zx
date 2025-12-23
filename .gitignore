@@ -2,3 +2,4 @@
 .idea/
 .env
 test_screeps.py
+.screeps.yml
