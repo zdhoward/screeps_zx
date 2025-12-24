@@ -7,6 +7,36 @@
 const RoleRegistry = require("lib.roles.registry");
 const UnitFactory = require("lib.unitFactory");
 
+const PREFIX_TO_ROLE = {
+    HRV: "harvester",
+    HAL: "hauler",
+    UPG: "upgrader",
+    BLD: "builder",
+    REP: "repairer",
+    JAN: "janitor",
+    SCO: "scout",
+    GRD: "guard",
+    MIN: "mineralHauler"
+};
+
+function bootstrapCreep(creep) {
+    if (creep.memory.role) return;
+
+    const parts = creep.name.split("_");
+    const prefix = parts[0];
+    const role = PREFIX_TO_ROLE[prefix];
+
+    if (!role) {
+        console.log(`[BOOT] Unknown creep prefix: ${creep.name}`);
+        return;
+    }
+
+    creep.memory.role = role;
+    creep.memory.homeRoom = parts[1] || creep.room.name;
+    creep.memory.assignment = creep.memory.assignment || {};
+}
+
+
 /**
  * Execute spawn intents for a room
  */
@@ -46,6 +76,10 @@ function executeSpawns(room) {
  * Execute all creep behaviors
  */
 function executeCreeps() {
+    for (const name in Game.creeps) {
+        bootstrapCreep(Game.creeps[name]);
+    }
+
     for (const creepName in Game.creeps) {
         const creep = Game.creeps[creepName];
         const role = creep.memory.role;
