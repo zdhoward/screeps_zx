@@ -3,4 +3,5 @@
 .env
 test-screeps.mjs
 .screeps.yml
+node_modules/
 /node_modules/
